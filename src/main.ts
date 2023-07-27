@@ -78,9 +78,7 @@ ${script}
       shell: 'bash'
     })
     core.info(result.stdio)
-    if (result.error) core.setFailed(error.message)
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
   }
 }
 
