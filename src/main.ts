@@ -36,7 +36,7 @@ function run(): void {
       : 'shell'
 
     const nixWrapper = `
-set -euxo pipefail
+set -uxo pipefail
 
 verlte() {
     [  "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
@@ -71,11 +71,12 @@ ${script}
       mode: 0o755
     })
 
-    execFileSync(nixWrapperPath, {
+    result = execFileSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',
       shell: 'bash'
     })
+    core.info(result)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
