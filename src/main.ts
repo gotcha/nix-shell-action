@@ -71,13 +71,13 @@ ${script}
     writeFileSync(`${workingDirectory}/${scriptPath}`, wrappedScript, {
       mode: 0o755
     })
-
+    core.info("gotcha")
     result = spawnSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',
       shell: 'bash'
     })
-    core.info(result.stdio)
+    core.info(result.stdio.toString())
   } catch (error) {
   }
 }
