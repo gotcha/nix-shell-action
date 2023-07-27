@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-/*import {execFileSync} from 'child_process'
-import {spawnSync} from 'child_process'*/
+/*import {execFileSync} from 'child_process'*/
+import {spawnSync} from 'child_process'
 import {writeFileSync} from 'fs'
 
 function run(): void {
@@ -71,16 +71,16 @@ ${script}
     writeFileSync(`${workingDirectory}/${scriptPath}`, wrappedScript, {
       mode: 0o755
     })
-  } catch (error) {
-    core.error('bla')
-  }
-  core.info('gotcha')
-  /*  result = spawnSync(nixWrapperPath, {
+    core.info('gotcha')
+    const result = spawnSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',
       shell: 'bash'
     })
-  core.info(result.stdio.toString())*/
+    core.info(result.toString())
+  } catch (error) {
+    core.error('bla')
+  }
 }
 
 run()

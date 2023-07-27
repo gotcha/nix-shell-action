@@ -31,8 +31,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
-/*import {execFileSync} from 'child_process'
-import {spawnSync} from 'child_process'*/
+/*import {execFileSync} from 'child_process'*/
+const child_process_1 = __nccwpck_require__(81);
 const fs_1 = __nccwpck_require__(147);
 function run() {
     try {
@@ -93,17 +93,17 @@ ${script}
         (0, fs_1.writeFileSync)(`${workingDirectory}/${scriptPath}`, wrappedScript, {
             mode: 0o755
         });
+        core.info('gotcha');
+        const result = (0, child_process_1.spawnSync)(nixWrapperPath, {
+            cwd: workingDirectory || undefined,
+            stdio: 'inherit',
+            shell: 'bash'
+        });
+        core.info(result.toString());
     }
     catch (error) {
         core.error('bla');
     }
-    core.info('gotcha');
-    /*  result = spawnSync(nixWrapperPath, {
-        cwd: workingDirectory || undefined,
-        stdio: 'inherit',
-        shell: 'bash'
-      })
-    core.info(result.stdio.toString())*/
 }
 run();
 
@@ -2802,6 +2802,14 @@ exports["default"] = _default;
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 81:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
