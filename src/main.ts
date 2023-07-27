@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-import {execFileSync} from 'child_process'
-import {spawnSync} from 'child_process'
+/*import {execFileSync} from 'child_process'
+import {spawnSync} from 'child_process'*/
 import {writeFileSync} from 'fs'
 
 function run(): void {
@@ -8,7 +8,9 @@ function run(): void {
     const interpreter: string = core.getInput('interpreter')
     const packages: string = core.getInput('packages')
     const flakes: string = core.getInput('flakes')
-    const flakesFromDevshell: boolean = core.getBooleanInput('flakes-from-devshell')
+    const flakesFromDevshell: boolean = core.getBooleanInput(
+      'flakes-from-devshell'
+    )
     const script: string = core.getInput('script')
     const workingDirectory: string = core.getInput('working-directory')
 
@@ -32,9 +34,7 @@ function run(): void {
           .map(pkg => `nixpkgs#${pkg.trim()}`)
           .join(' ')
 
-    const nixCommand = flakesFromDevshell
-      ? 'develop'
-      : 'shell'
+    const nixCommand = flakesFromDevshell ? 'develop' : 'shell'
 
     const nixWrapper = `
 set -uxo pipefail
@@ -71,9 +71,10 @@ ${script}
     writeFileSync(`${workingDirectory}/${scriptPath}`, wrappedScript, {
       mode: 0o755
     })
-      } catch (error) {
+  } catch (error) {
+    core.error('bla')
   }
-  core.info("gotcha")
+  core.info('gotcha')
   /*  result = spawnSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',

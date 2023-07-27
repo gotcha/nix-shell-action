@@ -31,7 +31,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
-const child_process_1 = __nccwpck_require__(81);
+/*import {execFileSync} from 'child_process'
+import {spawnSync} from 'child_process'*/
 const fs_1 = __nccwpck_require__(147);
 function run() {
     try {
@@ -52,17 +53,15 @@ function run() {
             .map(pkg => `nixpkgs.${pkg.trim()}`)
             .join(' ');
         const flakeWrappedPackages = flakesFromDevshell
-            ? ''
+            ? flakes
             : flakes.split(',').join(' ') ||
                 packages
                     .split(',')
                     .map(pkg => `nixpkgs#${pkg.trim()}`)
                     .join(' ');
-        const nixCommand = flakesFromDevshell
-            ? 'develop'
-            : 'shell';
+        const nixCommand = flakesFromDevshell ? 'develop' : 'shell';
         const nixWrapper = `
-set -euo pipefail
+set -uxo pipefail
 
 verlte() {
     [  "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
@@ -80,7 +79,7 @@ then
   nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
 else
   # nix 2.4 and later: nix shell
-nix --experimental-features 'nix-command flakes' ${nixCommand} ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
+  nix --experimental-features 'nix-command flakes' ${nixCommand} ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
 fi
       `;
         const wrappedScript = `
@@ -94,16 +93,17 @@ ${script}
         (0, fs_1.writeFileSync)(`${workingDirectory}/${scriptPath}`, wrappedScript, {
             mode: 0o755
         });
-        (0, child_process_1.execFileSync)(nixWrapperPath, {
-            cwd: workingDirectory || undefined,
-            stdio: 'inherit',
-            shell: 'bash'
-        });
     }
     catch (error) {
-        if (error instanceof Error)
-            core.setFailed(error.message);
+        core.error('bla');
     }
+    core.info('gotcha');
+    /*  result = spawnSync(nixWrapperPath, {
+        cwd: workingDirectory || undefined,
+        stdio: 'inherit',
+        shell: 'bash'
+      })
+    core.info(result.stdio.toString())*/
 }
 run();
 
@@ -2802,14 +2802,6 @@ exports["default"] = _default;
 
 "use strict";
 module.exports = require("assert");
-
-/***/ }),
-
-/***/ 81:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("child_process");
 
 /***/ }),
 
