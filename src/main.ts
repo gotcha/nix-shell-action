@@ -51,9 +51,11 @@ nix_version=$(nix --version | awk '{ print $3 }')
 if verlt $nix_version 2.4
 then
   # before nix 2.4: nix run
+  echo "nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}"
   nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
 else
   # nix 2.4 and later: nix shell
+echo "nix --experimental-features 'nix-command flakes' ${nixCommand} ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}"
 nix --experimental-features 'nix-command flakes' ${nixCommand} ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
 fi
       `
