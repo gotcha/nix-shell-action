@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import {execFileSync} from 'child_process'
+import {spawnSync} from 'child_process'
 import {writeFileSync} from 'fs'
 
 function run(): void {
@@ -71,12 +72,13 @@ ${script}
       mode: 0o755
     })
 
-    result = execFileSync(nixWrapperPath, {
+    result = spawnSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',
       shell: 'bash'
     })
-    core.info(result)
+    core.info(result.stdio)
+    if (result.error) core.setFailed(error.message)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
