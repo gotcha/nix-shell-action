@@ -36,6 +36,7 @@ const child_process_1 = __nccwpck_require__(81);
 const fs_1 = __nccwpck_require__(147);
 function run() {
     try {
+        core.info('--------------------');
         const interpreter = core.getInput('interpreter');
         const packages = core.getInput('packages');
         const flakes = core.getInput('flakes');
@@ -50,6 +51,8 @@ set -uxo pipefail
 
 ${script}
    `;
+        core.info(wrappedScript);
+        core.info('--------------------');
         (0, fs_1.writeFileSync)(`${workingDirectory}/${scriptPath}`, wrappedScript, {
             mode: 0o755
         });
@@ -94,15 +97,18 @@ fi
             mode: 0o755
         });
         core.info(nixWrapper);
+        core.info('--------------------');
         const result = (0, child_process_1.spawnSync)(nixWrapperPath, {
             cwd: workingDirectory || undefined,
             stdio: 'inherit',
             shell: 'bash'
         });
+        core.info(result.stdout.toString());
+        core.info('--------------------');
         if (result.status === null && result.error) {
             core.info(result.error.toString());
+            core.info('--------------------');
         }
-        core.info(result.stdout.toString());
     }
     catch (error) {
         core.error('error');

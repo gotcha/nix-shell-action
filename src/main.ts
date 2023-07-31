@@ -5,6 +5,7 @@ import {writeFileSync} from 'fs'
 
 function run(): void {
   try {
+    core.info('--------------------')
     const interpreter: string = core.getInput('interpreter')
     const packages: string = core.getInput('packages')
     const flakes: string = core.getInput('flakes')
@@ -23,6 +24,8 @@ set -uxo pipefail
 
 ${script}
    `
+    core.info(wrappedScript)
+    core.info('--------------------')
     writeFileSync(`${workingDirectory}/${scriptPath}`, wrappedScript, {
       mode: 0o755
     })
@@ -71,15 +74,18 @@ fi
       mode: 0o755
     })
     core.info(nixWrapper)
+    core.info('--------------------')
     const result = spawnSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',
       shell: 'bash'
     })
+    core.info(result.stdout.toString())
+    core.info('--------------------')
     if (result.status === null && result.error) {
       core.info(result.error.toString())
+      core.info('--------------------')
     }
-    core.info(result.stdout.toString())
   } catch (error) {
     core.error('error')
   }
