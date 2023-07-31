@@ -21,6 +21,15 @@ function run(): void {
       ? `./script.sh`
       : `${__dirname}/script.sh`
 
+    const wrappedScript = `
+set -uxo pipefail
+
+${script}
+   `
+    writeFileSync(`${workingDirectory}/${scriptPath}`, wrappedScript, {
+      mode: 0o755
+    })
+
     const wrappedPackages = packages
       .split(',')
       .map(pkg => `nixpkgs.${pkg.trim()}`)
@@ -58,28 +67,20 @@ else
   nix --experimental-features 'nix-command flakes' ${nixCommand} ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
 fi
       `
-
-    const wrappedScript = `
-set -euo pipefail
-
-${script}
-   `
-
     writeFileSync(`${workingDirectory}/${nixWrapperPath}`, nixWrapper, {
       mode: 0o755
     })
-    writeFileSync(`${workingDirectory}/${scriptPath}`, wrappedScript, {
-      mode: 0o755
-    })
-    core.info('gotcha')
     const result = spawnSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',
       shell: 'bash'
     })
-    core.info(result.toString())
+    if (result.status === null && result.error) {
+      core.info(result.error.toString())
+    }
+    core.info(result.stdout.toString())
   } catch (error) {
-    core.error('bla')
+    core.error('error')
   }
 }
 
