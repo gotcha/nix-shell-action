@@ -31,8 +31,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
-/*import {execFileSync} from 'child_process'*/
 const child_process_1 = __nccwpck_require__(81);
+// import {spawnSync} from 'child_process'
 const fs_1 = __nccwpck_require__(147);
 function run() {
     try {
@@ -98,20 +98,15 @@ fi
         });
         core.info(nixWrapper);
         core.info('--------------------');
-        const result = (0, child_process_1.spawnSync)(nixWrapperPath, {
+        (0, child_process_1.execFileSync)(nixWrapperPath, {
             cwd: workingDirectory || undefined,
             stdio: 'inherit',
             shell: 'bash'
         });
-        core.info(result.stdout.toString());
-        core.info('--------------------');
-        if (result.status === null && result.error) {
-            core.info(result.error.toString());
-            core.info('--------------------');
-        }
     }
     catch (error) {
-        core.error('error');
+        if (error instanceof Error)
+            core.setFailed(error.message);
     }
 }
 run();

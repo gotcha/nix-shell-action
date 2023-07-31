@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-/*import {execFileSync} from 'child_process'*/
-import {spawnSync} from 'child_process'
+import {execFileSync} from 'child_process'
+// import {spawnSync} from 'child_process'
 import {writeFileSync} from 'fs'
 
 function run(): void {
@@ -75,19 +75,13 @@ fi
     })
     core.info(nixWrapper)
     core.info('--------------------')
-    const result = spawnSync(nixWrapperPath, {
+    execFileSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',
       shell: 'bash'
     })
-    core.info(result.stdout.toString())
-    core.info('--------------------')
-    if (result.status === null && result.error) {
-      core.info(result.error.toString())
-      core.info('--------------------')
-    }
   } catch (error) {
-    core.error('error')
+    if (error instanceof Error) core.setFailed(error.message)
   }
 }
 
