@@ -93,6 +93,7 @@ fi
         (0, fs_1.writeFileSync)(`${workingDirectory}/${nixWrapperPath}`, nixWrapper, {
             mode: 0o755
         });
+        core.info(nixWrapper);
         const result = (0, child_process_1.spawnSync)(nixWrapperPath, {
             cwd: workingDirectory || undefined,
             stdio: 'inherit',

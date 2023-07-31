@@ -70,6 +70,7 @@ fi
     writeFileSync(`${workingDirectory}/${nixWrapperPath}`, nixWrapper, {
       mode: 0o755
     })
+    core.info(nixWrapper)
     const result = spawnSync(nixWrapperPath, {
       cwd: workingDirectory || undefined,
       stdio: 'inherit',
