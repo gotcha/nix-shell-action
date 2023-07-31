@@ -42,9 +42,6 @@ function run() {
         const flakesFromDevshell = core.getBooleanInput('flakes-from-devshell');
         const script = core.getInput('script');
         const workingDirectory = core.getInput('working-directory');
-        const nixWrapperPath = workingDirectory
-            ? `./wrapper.sh`
-            : `${__dirname}/wrapper.sh`;
         const scriptPath = workingDirectory
             ? `./script.sh`
             : `${__dirname}/script.sh`;
@@ -90,6 +87,9 @@ else
   nix --experimental-features 'nix-command flakes' ${nixCommand} ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
 fi
       `;
+        const nixWrapperPath = workingDirectory
+            ? `./wrapper.sh`
+            : `${__dirname}/wrapper.sh`;
         (0, fs_1.writeFileSync)(`${workingDirectory}/${nixWrapperPath}`, nixWrapper, {
             mode: 0o755
         });

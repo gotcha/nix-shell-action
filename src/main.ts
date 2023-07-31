@@ -14,9 +14,6 @@ function run(): void {
     const script: string = core.getInput('script')
     const workingDirectory: string = core.getInput('working-directory')
 
-    const nixWrapperPath = workingDirectory
-      ? `./wrapper.sh`
-      : `${__dirname}/wrapper.sh`
     const scriptPath = workingDirectory
       ? `./script.sh`
       : `${__dirname}/script.sh`
@@ -67,6 +64,9 @@ else
   nix --experimental-features 'nix-command flakes' ${nixCommand} ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
 fi
       `
+    const nixWrapperPath = workingDirectory
+      ? `./wrapper.sh`
+      : `${__dirname}/wrapper.sh`
     writeFileSync(`${workingDirectory}/${nixWrapperPath}`, nixWrapper, {
       mode: 0o755
     })
